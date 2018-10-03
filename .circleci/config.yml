@@ -38,10 +38,10 @@ jobs:
         key: v1-dependencies-{{ checksum "pom.xml" }}
 
     # run tests!
-    - run: mvn integration-test
+    - run: mvn verify
 
     - store-test-results:
-        path: surefire-reports
+        path: target/surefire-reports
 
     - store-test-results:
-        path: failsafe-reports
+        path: target/failsafe-reports
