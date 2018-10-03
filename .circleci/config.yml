@@ -40,3 +40,8 @@ jobs:
     # run tests!
     - run: mvn integration-test
 
+    - store-test-results:
+        path: surefire-reports
+
+    - store-test-results:
+        path: failsafe-reports
