@@ -1,5 +1,7 @@
-package codegeeks.spring5recipe;
+package codegeeks.spring5recipe.services;
 
+import codegeeks.spring5recipe.converters.RecipeCommandToRecipe;
+import codegeeks.spring5recipe.converters.RecipeToRecipeCommand;
 import codegeeks.spring5recipe.domain.Recipe;
 import codegeeks.spring5recipe.repositories.RecipeRepository;
 import org.junit.Before;
@@ -14,20 +16,25 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class RecipeServiceImplTest {
-    RecipeServiceImpl recipeService;
+    private RecipeServiceImpl recipeService;
 
     @Mock
     RecipeRepository recipeRepository;
 
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
     public void getRecipes() {
-
         Recipe recipe = new Recipe();
         Set<Recipe> recipeData = new HashSet<>();
         recipeData.add(recipe);
@@ -38,5 +45,6 @@ public class RecipeServiceImplTest {
         assertEquals(recipes.size(), 1);
 
         verify(recipeRepository, times(1)).findAll();
+        verify(recipeRepository, never()).findById(anyLong());
     }
 }

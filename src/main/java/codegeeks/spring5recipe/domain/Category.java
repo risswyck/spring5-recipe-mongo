@@ -2,6 +2,7 @@ package codegeeks.spring5recipe.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -16,6 +17,7 @@ public class Category {
 
     private String description;
 
+    @ToString.Exclude
     @ManyToMany(mappedBy = "categories")
     private Set<Recipe> recipes;
 

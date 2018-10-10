@@ -1,7 +1,7 @@
-package codegeeks.spring5recipe.controller;
+package codegeeks.spring5recipe.controllers;
 
-import codegeeks.spring5recipe.RecipeService;
 import codegeeks.spring5recipe.domain.Recipe;
+import codegeeks.spring5recipe.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class IndexControllerTest {
 
-    IndexController indexController;
+    private IndexController indexController;
 
     @Mock
     RecipeService recipeService;

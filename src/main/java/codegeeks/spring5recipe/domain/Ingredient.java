@@ -2,6 +2,7 @@ package codegeeks.spring5recipe.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,13 +22,15 @@ public class Ingredient {
     @OneToOne(fetch = FetchType.EAGER)
     private UnitOfMeasure unitOfMeasure;
 
+    @ToString.Exclude
     @ManyToOne
     private Recipe recipe;
+
 
     public Ingredient() {
     }
 
-    public Ingredient(String ripe_avocados, BigDecimal bigDecimal, UnitOfMeasure eachUom) {
+    public Ingredient(String description, BigDecimal amount, UnitOfMeasure unitOfMeasure) {
         this.description = description;
         this.amount = amount;
         this.unitOfMeasure = unitOfMeasure;
