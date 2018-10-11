@@ -43,7 +43,7 @@
                                 <h5>Difficulty:</h5>
                             </div>
                             <div class="col-md-3">
-                                <p th:text="${recipe.difficulty.toString().substring(0,1).toUpperCase()} + ${recipe.difficulty.toString().substring(1).toLowerCase()}">Easy</p>
+                                <p th:text="${recipe.difficulty} != null ? ${recipe.difficulty.toString().substring(0,1).toUpperCase()} + ${recipe.difficulty.toString().substring(1).toLowerCase()} : null">Easy</p>
                             </div>
                         </div>
                         <div class="row">
