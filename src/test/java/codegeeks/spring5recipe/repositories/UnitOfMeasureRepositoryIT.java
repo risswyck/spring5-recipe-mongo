@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -20,18 +21,26 @@ public class UnitOfMeasureRepositoryIT {
     UnitOfMeasureRepository unitOfMeasureRepository;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @Test
     public void findByDescription() {
         Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findByDescription("Teaspoon");
-        assertEquals("Teaspoon", uom.get().getDescription());
+        if (uom.isPresent()) {
+            assertEquals("Teaspoon", uom.get().getDescription());
+        } else {
+            fail("UOM must not be null");
+        }
     }
 
     @Test
     public void findByDescriptionCup() {
         Optional<UnitOfMeasure> uom = unitOfMeasureRepository.findByDescription("Cup");
-        assertEquals("Cup", uom.get().getDescription());
+        if (uom.isPresent()) {
+            assertEquals("Cup", uom.get().getDescription());
+        } else {
+            fail("UOM must not be null");
+        }
     }
 }

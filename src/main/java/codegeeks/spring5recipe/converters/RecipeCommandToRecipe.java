@@ -4,7 +4,6 @@ import codegeeks.spring5recipe.commands.RecipeCommand;
 import codegeeks.spring5recipe.domain.Recipe;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -22,10 +21,9 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
     }
 
     @Synchronized
-    @Nullable
     @Override
     public Recipe convert(RecipeCommand source) {
-        if (source==null) {
+        if (source == null) {
             return null;
         }
         final Recipe recipe = new Recipe();
@@ -37,8 +35,9 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
         recipe.setSource(source.getSource());
         recipe.setUrl(source.getUrl());
         recipe.setDirections(source.getDirections());
-        recipe.setIngredients(source.getIngredients().stream().map(ingredientCommandToIngredient::convert).collect(Collectors.toSet()));
+        source.getIngredients().forEach(ingredientCommand -> recipe.addIngredient(ingredientCommandToIngredient.convert(ingredientCommand)));
         recipe.setDifficulty(source.getDifficulty());
+        recipe.setImage(source.getImage());
         recipe.setNotes(notesCommandToNotes.convert(source.getNotes()));
         recipe.setCategories(source.getCategories().stream().map(categoryCommandToCategory::convert).collect(Collectors.toSet()));
         return recipe;

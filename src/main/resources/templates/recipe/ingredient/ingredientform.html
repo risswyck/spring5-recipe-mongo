@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>New Ingredient</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/4.1.3/css/bootstrap.min.css}">
+
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.recipeId} + '/ingredient'}" method="post">
+                <input type="hidden" th:field="*{id}"/>
+                <div class="card-columns" style="column-count: 1">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h1 class="card-title">Edit Ingredient Information</h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 form-group">
+                                    <label>Description:</label>
+                                    <input type="text" class="form-control" th:field="*{description}"/>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Amount:</label>
+                                    <input type="number" class="form-control" th:field="*{amount}"/>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    <label>Unit of Measure:</label>
+                                    <select class="form-control" name="unitOfMeasure.id">
+                                        <option th:each="unitOfMeasure : ${unitOfMeasureList}"
+                                                th:value="${unitOfMeasure.id}"
+                                                th:selected="${unitOfMeasure.id.equals(ingredient.unitOfMeasure.id)}"
+                                                th:text="${unitOfMeasure.description}">
+                                            Each
+                                        </option>
+                                        <option th:remove="all">Tablespoon</option>
+                                        <option th:remove="all">Teaspoon</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"
+        th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"
+        th:src="@{/webjars/popper.js/1.14.3/umd/popper.min.js}"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"
+        th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>
+</body>
+</html>

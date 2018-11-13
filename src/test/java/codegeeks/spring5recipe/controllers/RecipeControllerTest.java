@@ -2,6 +2,7 @@ package codegeeks.spring5recipe.controllers;
 
 import codegeeks.spring5recipe.commands.RecipeCommand;
 import codegeeks.spring5recipe.domain.Recipe;
+import codegeeks.spring5recipe.exceptions.NotFoundException;
 import codegeeks.spring5recipe.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,14 +24,15 @@ public class RecipeControllerTest {
     @Mock
     RecipeService recipeService;
 
-    RecipeController controller;
     private MockMvc mockMvc;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        controller = new RecipeController(recipeService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        RecipeController controller = new RecipeController(recipeService);
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -44,6 +46,24 @@ public class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void testRecipeNotFound() throws Exception {
+        when(recipeService.findById(anyLong())).thenThrow(new NotFoundException("Recipe not found. For Recipe ID 42"));
+
+        mockMvc.perform(get("/recipe/42/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("recipe/404Error"))
+                .andExpect(model().attributeExists("exception"));
+    }
+
+    @Test
+    public void testRecipeBadRequest() throws Exception {
+        mockMvc.perform(get("/recipe/not_a_number/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("recipe/400Error"))
+                .andExpect(model().attributeExists("exception"));
     }
 
     @Test
@@ -65,9 +85,27 @@ public class RecipeControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", "")
                 .param("description", "Awesome recipe")
+                .param("directions", "Some directions")
         )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/42/show"));
+    }
+
+    @Test
+    public void testPostNewRecipeFormWithValidationError() throws Exception {
+        RecipeCommand command = new RecipeCommand();
+        command.setId(42L);
+
+        when(recipeService.saveRecipeCommand(any())).thenReturn(command);
+
+        mockMvc.perform(post("/recipe")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("description", "Awesome recipe")
+        )
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("recipe"))
+                .andExpect(view().name("recipe/recipeform"));
     }
 
     @Test

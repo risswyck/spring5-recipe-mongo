@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 public class CategoryTest {
 
-    Category category;
+    private Category category;
 
     @Before
     public void setUp() {

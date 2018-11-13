@@ -4,13 +4,16 @@ import codegeeks.spring5recipe.commands.RecipeCommand;
 import codegeeks.spring5recipe.converters.RecipeCommandToRecipe;
 import codegeeks.spring5recipe.converters.RecipeToRecipeCommand;
 import codegeeks.spring5recipe.domain.Recipe;
+import codegeeks.spring5recipe.exceptions.NotFoundException;
 import codegeeks.spring5recipe.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Service
@@ -29,14 +32,12 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Set<Recipe> getRecipes() {
         log.debug("I'm in the service");
-        Set<Recipe> recipeSet = new HashSet<>();
-        recipeRepository.findAll().iterator().forEachRemaining(recipeSet::add);
-        return recipeSet;
+        return StreamSupport.stream(recipeRepository.findAll().spliterator(), false).collect(toSet());
     }
 
     @Override
     public Recipe findById(Long id) {
-        return recipeRepository.findById(id).orElseThrow(()->new RuntimeException("Recipe not found"));
+        return recipeRepository.findById(id).orElseThrow(() -> new NotFoundException("Recipe not found. For Recipe ID " + id));
     }
 
     @Override

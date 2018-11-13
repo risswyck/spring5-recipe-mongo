@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -39,6 +40,7 @@ public class RecipeServiceIT {
         Iterable<Recipe> recipes = recipeRepository.findAll();
         Recipe testRecipe = recipes.iterator().next();
         RecipeCommand testRecipeCommand = recipeToRecipeCommand.convert(testRecipe);
+        assertNotNull(testRecipeCommand);
 
         //when
         testRecipeCommand.setDescription(NEW_DESCRIPTION);
