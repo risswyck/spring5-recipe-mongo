@@ -74,12 +74,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <parameters>false</parameters>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>
