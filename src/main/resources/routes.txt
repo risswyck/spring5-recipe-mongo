@@ -1,0 +1,23 @@
+GET
+GET /
+GET /index -> IndexController.getIndexPage(Model model) -> index
+
+GET recipe/list              RecipeController.showById     -> recipe/list
+GET recipe/{recipeId}/show   RecipeController.showById     -> recipe/show
+GET recipe/new               RecipeController.newRecipe    -> recipe/recipeform
+GET recipe/{recipeId}/update RecipeController.updateRecipe -> recipe/recipeform
+GET recipe/{recipeId}/delete RecipeController.deleteRecipe -> redirect:/
+POST recipe                  RecipeController.safeOrUpdate -> redirect:/recipe/{recipeId}/show
+
+GET recipe/{recipeId}/ingredient/list                  IngredientController.listIngredients  -> recipe/ingredient/list
+GET recipe/{recipeId}/ingredients                      IngredientController.listIngredients  -> recipe/ingredient/list
+GET recipe/{recipeId}/ingredient/{ingredientId}/show   IngredientController.showIngredient   -> recipe/ingredient/show
+GET recipe/{recipeId}/ingredient/new                   IngredientController.createIngredient -> recipe/ingredient/ingredientform
+GET recipe/{recipeId}/ingredient/{ingredientId}/update IngredientController.updateIngredient -> recipe/ingredient/ingredientform
+GET recipe/{recipeId}/ingredient/{ingredientId}/delete IngredientController.deleteIngredient -> redirect:/recipe/{recipeId}/ingredients
+POST recipe/{recipeId}/ingredient                      IngredientController.saveOrUpdate     -> redirect:/recipe/{recipeId}/ingredient/{ingredientId}/show
+
+GET recipe/{recipeId}/image ImageController.showImageForm -> recipe/imageuploadform
+POST recipe/{recipeId}/image ImageController.saveImage    -> redirect:/recipe/{recipeId}/show
+GET recipe/{recipeId}/recipeimage ImageController.renderImageFromDB -> HttpServletResponse
+
