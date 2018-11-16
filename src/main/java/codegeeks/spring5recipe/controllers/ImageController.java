@@ -31,30 +31,29 @@ public class ImageController {
 
     @GetMapping("/recipe/{recipeId}/image")
     public String showImageForm(@PathVariable String recipeId, Model model) {
-        model.addAttribute("recipe", recipeService.findCommandById(Long.valueOf(recipeId)));
+        model.addAttribute("recipe", recipeService.findCommandById(recipeId));
         return "recipe/imageuploadform";
     }
 
     @PostMapping("/recipe/{recipeId}/image")
     public String saveImage(@PathVariable String recipeId, @RequestParam MultipartFile imageFile) {
-        imageService.saveImageFile(Long.valueOf(recipeId), imageFile);
+        imageService.saveImageFile(recipeId, imageFile);
         return "redirect:/recipe/" + recipeId + "/show";
     }
 
     @GetMapping("/recipe/{recipeId}/recipeimage")
     public void renderImageFromDB(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
-        RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
+        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId);
         InputStream is = new ByteArrayInputStream(toNativeByteArray(recipeCommand.getImage()));
         response.setContentType("image/jpeg");
         IOUtils.copy(is, response.getOutputStream());
     }
 
     private static byte[] toNativeByteArray(Byte[] source) {
-        byte[] destination = new byte[source.length];
-        int i = 0;
-        for( Byte b : source) {
-            destination[i++] = b;
+        byte[] dest = new byte[source != null ? source.length : 0];
+        for (int i = 0; i < dest.length; i++) {
+            dest[i] = source[i];
         }
-        return destination;
+        return dest;
     }
 }

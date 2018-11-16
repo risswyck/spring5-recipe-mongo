@@ -32,8 +32,42 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        loadCategories();
+        loadUnitOfMeasures();
         recipeRepository.saveAll(getRecipes());
         log.debug("Loading bootstrap data...");
+    }
+
+    private void loadCategories() {
+        List<Category> categories = new ArrayList<>();
+        categories.add(createCategory("American"));
+        categories.add(createCategory("Italian"));
+        categories.add(createCategory("Mexican"));
+        categories.add(createCategory("Fast Food"));
+        categoryRepository.saveAll(categories);
+    }
+
+    private Category createCategory(String description) {
+        Category category = new Category();
+        category.setDescription(description);
+        return category;
+    }
+
+    private void loadUnitOfMeasures() {
+        List<UnitOfMeasure> unitOfMeasures = new ArrayList<>();
+        unitOfMeasures.add(createUnitOfMeasure("Each"));
+        unitOfMeasures.add(createUnitOfMeasure("Tablespoon"));
+        unitOfMeasures.add(createUnitOfMeasure("Teaspoon"));
+        unitOfMeasures.add(createUnitOfMeasure("Dash"));
+        unitOfMeasures.add(createUnitOfMeasure("Pint"));
+        unitOfMeasures.add(createUnitOfMeasure("Cup"));
+        unitOfMeasureRepository.saveAll(unitOfMeasures);
+    }
+
+    private UnitOfMeasure createUnitOfMeasure(String description) {
+        UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
+        unitOfMeasure.setDescription(description);
+        return unitOfMeasure;
     }
 
     private List<Recipe> getRecipes() {
@@ -43,18 +77,16 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         UnitOfMeasure tableSpoonUom = getUnitOfMeasure("Tablespoon");
         UnitOfMeasure teaSpoonUom = getUnitOfMeasure("Teaspoon");
         UnitOfMeasure dashUom = getUnitOfMeasure("Dash");
-        UnitOfMeasure pintUom = getUnitOfMeasure("Pint");
-        UnitOfMeasure cupUom = getUnitOfMeasure("Cup");
 
         Category americanCategory = getCategory("American");
         Category mexicanCategory = getCategory("Mexican");
 
-        Recipe guacRecipe = new Recipe();
-        guacRecipe.setDescription("Perfect Guacamole");
-        guacRecipe.setPrepTime(10);
-        guacRecipe.setCookTime(0);
-        guacRecipe.setDifficulty(Difficulty.EASY);
-        guacRecipe.setDirections("1 Cut avocado, remove flesh: Cut the avocados in half. Remove seed. Score the inside of the avocado with a blunt knife and scoop out the flesh with a spoon. (See How to Cut and Peel an Avocado.) Place in a bowl.\n" +
+        Recipe guacamoleRecipe = new Recipe();
+        guacamoleRecipe.setDescription("Perfect Guacamole");
+        guacamoleRecipe.setPrepTime(10);
+        guacamoleRecipe.setCookTime(0);
+        guacamoleRecipe.setDifficulty(Difficulty.EASY);
+        guacamoleRecipe.setDirections("1 Cut avocado, remove flesh: Cut the avocados in half. Remove seed. Score the inside of the avocado with a blunt knife and scoop out the flesh with a spoon. (See How to Cut and Peel an Avocado.) Place in a bowl.\n" +
                 "\n" +
                 "2 Mash with a fork: Using a fork, roughly mash the avocado. (Don't overdo it! The guacamole should be a little chunky.)\n" +
                 "\n" +
@@ -72,24 +104,24 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
                 "To extend a limited supply of avocados, add either sour cream or cottage cheese to your guacamole dip. Purists may be horrified, but so what? It tastes great.\n" +
                 "For a deviled egg version with guacamole, try our Guacamole Deviled Eggs!");
 
-        guacRecipe.setNotes(guacNotes);
+        guacamoleRecipe.setNotes(guacNotes);
 
-        guacRecipe.addIngredient(new Ingredient("ripe avocados", new BigDecimal(2), eachUom));
-        guacRecipe.addIngredient(new Ingredient("Kosher salt", new BigDecimal(5), teaSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("minced red onionoth thinly sliced green onion", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), eachUom));
-        guacRecipe.addIngredient(new Ingredient("cilantro (leaves and tender stems), finely chopped", new BigDecimal(2), tableSpoonUom));
-        guacRecipe.addIngredient(new Ingredient("freshly grated black pepper", new BigDecimal(2), dashUom));
-        guacRecipe.addIngredient(new Ingredient("ripe tomato, seeds and pulp removed, chopped", new BigDecimal(0.5), eachUom));
+        guacamoleRecipe.addIngredient(new Ingredient("ripe avocados", new BigDecimal(2), eachUom));
+        guacamoleRecipe.addIngredient(new Ingredient("Kosher salt", new BigDecimal(5), teaSpoonUom));
+        guacamoleRecipe.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(2), tableSpoonUom));
+        guacamoleRecipe.addIngredient(new Ingredient("minced red onionoth thinly sliced green onion", new BigDecimal(2), tableSpoonUom));
+        guacamoleRecipe.addIngredient(new Ingredient("serrano chiles, stems and seeds removed, minced", new BigDecimal(2), eachUom));
+        guacamoleRecipe.addIngredient(new Ingredient("cilantro (leaves and tender stems), finely chopped", new BigDecimal(2), tableSpoonUom));
+        guacamoleRecipe.addIngredient(new Ingredient("freshly grated black pepper", new BigDecimal(2), dashUom));
+        guacamoleRecipe.addIngredient(new Ingredient("ripe tomato, seeds and pulp removed, chopped", new BigDecimal(0.5), eachUom));
 
-        guacRecipe.getCategories().add(americanCategory);
-        guacRecipe.getCategories().add(mexicanCategory);
-        guacRecipe.setUrl("https://www.simplyrecipes.com/recipes/perfect_guacamole/");
-        guacRecipe.setServings(4);
-        guacRecipe.setSource("Simply Recipes");
+        guacamoleRecipe.getCategories().add(americanCategory);
+        guacamoleRecipe.getCategories().add(mexicanCategory);
+        guacamoleRecipe.setUrl("https://www.simplyrecipes.com/recipes/perfect_guacamole/");
+        guacamoleRecipe.setServings(4);
+        guacamoleRecipe.setSource("Simply Recipes");
 
-        recipes.add(guacRecipe);
+        recipes.add(guacamoleRecipe);
 
         Recipe tacosRecipe = new Recipe();
         tacosRecipe.setDescription("Spicy Grilled Chicken Taco");

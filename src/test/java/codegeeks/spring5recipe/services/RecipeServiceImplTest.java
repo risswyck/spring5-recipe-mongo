@@ -45,13 +45,13 @@ public class RecipeServiceImplTest {
         assertEquals(recipes.size(), 1);
 
         verify(recipeRepository, times(1)).findAll();
-        verify(recipeRepository, never()).findById(anyLong());
+        verify(recipeRepository, never()).findById(anyString());
     }
 
     @Test
     public void deleteById() {
         // given
-        Long idToDelete = 2L;
+        String idToDelete = "2";
 
         // when
         recipeService.deleteById(idToDelete);

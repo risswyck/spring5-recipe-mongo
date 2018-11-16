@@ -3,6 +3,7 @@ package codegeeks.spring5recipe.controllers;
 import codegeeks.spring5recipe.commands.RecipeCommand;
 import codegeeks.spring5recipe.domain.Recipe;
 import codegeeks.spring5recipe.exceptions.NotFoundException;
+import codegeeks.spring5recipe.services.CategoryService;
 import codegeeks.spring5recipe.services.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,13 +14,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class RecipeControllerTest {
+
+    @Mock
+    CategoryService categoryService;
 
     @Mock
     RecipeService recipeService;
@@ -29,7 +32,7 @@ public class RecipeControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        RecipeController controller = new RecipeController(recipeService);
+        RecipeController controller = new RecipeController(recipeService, categoryService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
@@ -38,9 +41,9 @@ public class RecipeControllerTest {
     @Test
     public void testGetRecipe() throws Exception {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
 
-        when(recipeService.findById(anyLong())).thenReturn(recipe);
+        when(recipeService.findById(anyString())).thenReturn(recipe);
 
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isOk())
@@ -50,19 +53,11 @@ public class RecipeControllerTest {
 
     @Test
     public void testRecipeNotFound() throws Exception {
-        when(recipeService.findById(anyLong())).thenThrow(new NotFoundException("Recipe not found. For Recipe ID 42"));
+        when(recipeService.findById(anyString())).thenThrow(new NotFoundException("Recipe not found. For Recipe ID 42"));
 
         mockMvc.perform(get("/recipe/42/show"))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("recipe/404Error"))
-                .andExpect(model().attributeExists("exception"));
-    }
-
-    @Test
-    public void testRecipeBadRequest() throws Exception {
-        mockMvc.perform(get("/recipe/not_a_number/show"))
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("recipe/400Error"))
                 .andExpect(model().attributeExists("exception"));
     }
 
@@ -77,7 +72,7 @@ public class RecipeControllerTest {
     @Test
     public void testPostNewRecipeForm() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(42L);
+        command.setId("42");
 
         when(recipeService.saveRecipeCommand(any())).thenReturn(command);
 
@@ -94,7 +89,7 @@ public class RecipeControllerTest {
     @Test
     public void testPostNewRecipeFormWithValidationError() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(42L);
+        command.setId("42");
 
         when(recipeService.saveRecipeCommand(any())).thenReturn(command);
 
@@ -111,7 +106,7 @@ public class RecipeControllerTest {
     @Test
     public void testGetUpdateView() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(42L);
+        command.setId("42");
 
         when(recipeService.findCommandById(any())).thenReturn(command);
 
@@ -127,6 +122,6 @@ public class RecipeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
-        verify(recipeService, times(1)).deleteById(anyLong());
+        verify(recipeService, times(1)).deleteById(anyString());
     }
 }

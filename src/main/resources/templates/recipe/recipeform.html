@@ -44,17 +44,14 @@
                                     <label>Categories:</label>
                                 </div>
                                 <div class="col-md-9 form-group">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" value=""/>
-                                            Cat 1
-                                        </label>
-                                    </div>
-                                    <div class="form-check" th:remove="all">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" value=""/>
-                                            Cat 2
-                                        </label>
+                                    <div th:each="cat : ${allCategories}" >
+                                        <div class="form-check">
+                                            <input type="checkbox" th:field="*{categories}" th:value="${cat.description}" class="form-check-input" />
+                                            <label th:for="${#ids.prev('categories')}"
+                                                   th:text="${cat.description}" class="form-check-label" >
+                                                Cat 2
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -138,6 +135,15 @@
                                         </li>
                                     </ul>
                                 </div>
+
+                                <!-- keep information about ingredients in binding -->
+                                <div th:each="ingredientEach, idx : ${recipe.ingredients}" >
+                                    <input  type="hidden" th:field="*{ingredients[__${idx.index}__].id}" />
+                                    <input  type="hidden" th:field="*{ingredients[__${idx.index}__].description}" />
+                                    <input  type="hidden" th:field="*{ingredients[__${idx.index}__].amount}" />
+                                    <input  type="hidden" th:field="*{ingredients[__${idx.index}__].unitOfMeasure.id}" />
+                                </div>
+
                             </div>
                         </div>
                     </div>

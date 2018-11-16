@@ -1,7 +1,6 @@
 package codegeeks.spring5recipe.controllers;
 
 import codegeeks.spring5recipe.commands.IngredientCommand;
-import codegeeks.spring5recipe.commands.RecipeCommand;
 import codegeeks.spring5recipe.commands.UnitOfMeasureCommand;
 import codegeeks.spring5recipe.services.IngredientService;
 import codegeeks.spring5recipe.services.RecipeService;
@@ -30,7 +29,7 @@ public class IngredientController {
     @GetMapping("recipe/{recipeId}/ingredients")
     public String listIngredients(@PathVariable String recipeId, Model model) {
         log.debug("Getting ingredient list for recipe id: " + recipeId);
-        model.addAttribute("recipe", recipeService.findCommandById(new Long(recipeId)));
+        model.addAttribute("recipe", recipeService.findCommandById(recipeId));
         return "recipe/ingredient/list";
     }
 
@@ -39,7 +38,7 @@ public class IngredientController {
                                  @PathVariable String ingredientId,
                                  Model model) {
         log.debug("Getting ingredient id " + ingredientId + " for recipe id: " + recipeId);
-        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(new Long(recipeId), new Long(ingredientId)));
+        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId));
         return "recipe/ingredient/show";
     }
 
@@ -48,7 +47,7 @@ public class IngredientController {
                                    @PathVariable String ingredientId,
                                    Model model) {
         log.debug("Updating ingredient id " + ingredientId + " for recipe id: " + recipeId);
-        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(new Long(recipeId), new Long(ingredientId)));
+        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId));
         model.addAttribute("unitOfMeasureList", unitOfMeasureService.listAllUnitOfMeasures());
         return "recipe/ingredient/ingredientform";
     }
@@ -57,7 +56,7 @@ public class IngredientController {
     public String deleteIngredient(@PathVariable String recipeId,
                                    @PathVariable String ingredientId) {
         log.debug("Deleting ingredient id " + ingredientId + " for recipe id: " + recipeId);
-        ingredientService.deleteByRecipeIdAndIngredientId(Long.valueOf(recipeId), Long.valueOf(ingredientId));
+        ingredientService.deleteByRecipeIdAndIngredientId(recipeId, ingredientId);
         return "redirect:"
                 + "/recipe/" + recipeId
                 + "/ingredients";
@@ -68,10 +67,7 @@ public class IngredientController {
                                    Model model) {
         log.debug("Create ingredient for recipe id: " + recipeId);
 
-        RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
-        // todo raise exception if null
         IngredientCommand ingredientCommand = new IngredientCommand();
-        ingredientCommand.setRecipeId(recipeCommand.getId());
         ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
 
         model.addAttribute("ingredient", ingredientCommand);
@@ -80,12 +76,12 @@ public class IngredientController {
     }
 
     @PostMapping("recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@ModelAttribute IngredientCommand command) {
-        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
-        log.debug("saved recipe id: " + savedCommand.getRecipeId());
+    public String saveOrUpdate(@PathVariable String recipeId, @ModelAttribute IngredientCommand command) {
+        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(recipeId, command);
+        log.debug("saved recipe id: " + recipeId);
         log.debug("saved ingredient id: " + savedCommand.getId());
         return "redirect:" +
-                "/recipe/" + savedCommand.getRecipeId() +
+                "/recipe/" + recipeId +
                 "/ingredient/" + savedCommand.getId() +
                 "/show";
     }

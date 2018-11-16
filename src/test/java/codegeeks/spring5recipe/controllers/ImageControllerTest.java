@@ -11,7 +11,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -40,10 +39,10 @@ public class ImageControllerTest {
     public void testShowImageForm() throws Exception {
         // given
         RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
+        recipeCommand.setId("1");
 
         // when
-        when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
+        when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
 
         // then
         mockMvc.perform(get("/recipe/1/image"))
@@ -51,7 +50,7 @@ public class ImageControllerTest {
                 .andExpect(view().name("recipe/imageuploadform"))
                 .andExpect(model().attributeExists("recipe"));
 
-        verify(recipeService, times(1)).findCommandById(anyLong());
+        verify(recipeService, times(1)).findCommandById(anyString());
     }
 
     @Test
@@ -65,21 +64,7 @@ public class ImageControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/1/show"));
 
-        verify(imageService, times(1)).saveImageFile(anyLong(), any());
+        verify(imageService, times(1)).saveImageFile(anyString(), any());
     }
 
-    @Test
-    public void testGetImageWithNumberFormatException() throws Exception {
-        MockMultipartFile multipartFile = new MockMultipartFile("imageFile", "testing.txt", "text/plain", "image data".getBytes());
-
-        // then
-        mockMvc.perform(multipart("/recipe/not_a_number/image")
-                .file(multipartFile)
-        )
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("recipe/400Error"));
-
-        verifyZeroInteractions(imageService);
-
-    }
 }

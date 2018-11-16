@@ -7,8 +7,8 @@ import java.util.Set;
 
 public interface RecipeService {
     Set<Recipe> getRecipes();
-    Recipe findById(Long id);
-    RecipeCommand findCommandById(Long id);
+    Recipe findById(String id);
+    RecipeCommand findCommandById(String id);
     RecipeCommand saveRecipeCommand(RecipeCommand command);
-    void deleteById(Long id);
+    void deleteById(String id);
 }

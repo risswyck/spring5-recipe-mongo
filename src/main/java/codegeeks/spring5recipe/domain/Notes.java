@@ -1,25 +1,13 @@
 package codegeeks.spring5recipe.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
-
-@Data
-@EqualsAndHashCode(exclude = {"recipe"})
-@Entity
+@Getter
+@Setter
 public class Notes {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ToString.Exclude
-    @OneToOne
-    private Recipe recipe;
-
-    @Lob
+    private String id;
     private String recipeNotes;
-
 }

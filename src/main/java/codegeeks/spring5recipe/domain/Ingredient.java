@@ -1,32 +1,25 @@
 package codegeeks.spring5recipe.domain;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"recipe"})
-@Entity
 public class Ingredient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id = UUID.randomUUID().toString();
 
     private String description;
     private BigDecimal amount;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @DBRef
     private UnitOfMeasure unitOfMeasure;
-
-    @ToString.Exclude
-    @ManyToOne
-    private Recipe recipe;
 
     public Ingredient() {
     }

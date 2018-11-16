@@ -17,7 +17,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 public class IngredientServiceImplTest {
@@ -43,26 +42,25 @@ public class IngredientServiceImplTest {
     public void findByRecipeIdAndIngredientId() {
         // given
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
 
         Ingredient ingredient1 = new Ingredient();
-        ingredient1.setId(1L);
+        ingredient1.setId("1");
 
         Ingredient ingredient2 = new Ingredient();
-        ingredient2.setId(2L);
+        ingredient2.setId("2");
 
         recipe.addIngredient(ingredient1);
         recipe.addIngredient(ingredient2);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
 
         // when
-        IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId(1L, 2L);
+        IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId("1", "2");
 
         // then
-        assertEquals(Long.valueOf(2L), ingredientCommand.getId());
-        assertEquals(Long.valueOf(1L), ingredientCommand.getRecipeId());
-        verify(recipeRepository, times(1)).findById(anyLong());
+        assertEquals("2", ingredientCommand.getId());
+        verify(recipeRepository, times(1)).findById(anyString());
 
     }
 
@@ -70,27 +68,25 @@ public class IngredientServiceImplTest {
     public void saveIngredientCommand() {
         // given
         IngredientCommand command = new IngredientCommand();
-        command.setId(3L);
-        command.setRecipeId(2L);
+        command.setId("3");
 
         Optional<Recipe> recipeOptional = Optional.of(new Recipe());
 
         Recipe savedRecipe = new Recipe();
-        savedRecipe.setId(2L);
+        savedRecipe.setId("2");
         Ingredient ingredient = new Ingredient();
-        ingredient.setId(3L);
+        ingredient.setId("3");
         savedRecipe.addIngredient(ingredient);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
         when(recipeRepository.save(any())).thenReturn(savedRecipe);
 
         // when
-        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
+        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(savedRecipe.getId(), command);
 
         // then
-        assertEquals(Long.valueOf(3L), savedCommand.getId());
-        assertEquals(Long.valueOf(2L), savedCommand.getRecipeId());
-        verify(recipeRepository, times(1)).findById(anyLong());
+        assertEquals("3", savedCommand.getId());
+        verify(recipeRepository, times(1)).findById(anyString());
         verify(recipeRepository, times(1)).save(any(Recipe.class));
 
     }
@@ -99,27 +95,27 @@ public class IngredientServiceImplTest {
     public void deleteByRecipeIdIngredientId() {
         // given
         Ingredient ingredient1 = new Ingredient();
-        ingredient1.setId(1L);
+        ingredient1.setId("1");
 
         Ingredient ingredient2 = new Ingredient();
-        ingredient2.setId(2L);
+        ingredient2.setId("2");
 
         Ingredient ingredient3 = new Ingredient();
-        ingredient3.setId(3L);
+        ingredient3.setId("3");
 
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
         recipe.addIngredient(ingredient1);
         recipe.addIngredient(ingredient2);
         recipe.addIngredient(ingredient3);
 
         Recipe savedRecipe = new Recipe();
-        savedRecipe.setId(1L);
+        savedRecipe.setId("1");
         savedRecipe.addIngredient(ingredient1);
         savedRecipe.addIngredient(ingredient3);
 
         /// when
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
         when(recipeRepository.save(any())).thenReturn(savedRecipe);
 
         ingredientService.deleteByRecipeIdAndIngredientId(recipe.getId(), ingredient2.getId());

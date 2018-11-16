@@ -12,10 +12,10 @@ import static org.junit.Assert.*;
 
 public class IngredientToIngredientCommandTest {
 
-    private static final Long ID = 1L;
+    private static final String ID = "1";
     private static final String DESCRIPTION = "description";
     private static final BigDecimal AMOUNT = new BigDecimal(1);
-    private static final Long UOM_ID = 2L;
+    private static final String UOM_ID = "2";
     private static final String UOM_DESCRIPTION = "Teaspoon";
 
     private IngredientToIngredientCommand converter;
