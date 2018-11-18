@@ -14,7 +14,7 @@
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <form th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.recipeId} + '/ingredient'}" method="post">
+            <form th:object="${ingredient}" th:action="@{'/recipe/' + ${recipeId} + '/ingredient'}" method="post">
                 <input type="hidden" th:field="*{id}"/>
                 <div class="card-columns" style="column-count: 1">
                     <div class="card">

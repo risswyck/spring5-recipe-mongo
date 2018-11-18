@@ -39,21 +39,31 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     }
 
     private void loadCategories() {
+        List<Category> categories = buildCategoryList();
+        categoryRepository.saveAll(categories);
+    }
+
+    public static List<Category> buildCategoryList() {
         List<Category> categories = new ArrayList<>();
         categories.add(createCategory("American"));
         categories.add(createCategory("Italian"));
         categories.add(createCategory("Mexican"));
         categories.add(createCategory("Fast Food"));
-        categoryRepository.saveAll(categories);
+        return categories;
     }
 
-    private Category createCategory(String description) {
+    private static Category createCategory(String description) {
         Category category = new Category();
         category.setDescription(description);
         return category;
     }
 
     private void loadUnitOfMeasures() {
+        List<UnitOfMeasure> unitOfMeasures = buildUnitOfMeasureList();
+        unitOfMeasureRepository.saveAll(unitOfMeasures);
+    }
+
+    public static List<UnitOfMeasure> buildUnitOfMeasureList() {
         List<UnitOfMeasure> unitOfMeasures = new ArrayList<>();
         unitOfMeasures.add(createUnitOfMeasure("Each"));
         unitOfMeasures.add(createUnitOfMeasure("Tablespoon"));
@@ -61,16 +71,16 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         unitOfMeasures.add(createUnitOfMeasure("Dash"));
         unitOfMeasures.add(createUnitOfMeasure("Pint"));
         unitOfMeasures.add(createUnitOfMeasure("Cup"));
-        unitOfMeasureRepository.saveAll(unitOfMeasures);
+        return unitOfMeasures;
     }
 
-    private UnitOfMeasure createUnitOfMeasure(String description) {
+    private static UnitOfMeasure createUnitOfMeasure(String description) {
         UnitOfMeasure unitOfMeasure = new UnitOfMeasure();
         unitOfMeasure.setDescription(description);
         return unitOfMeasure;
     }
 
-    private List<Recipe> getRecipes() {
+    public List<Recipe> getRecipes() {
         List<Recipe> recipes = new ArrayList<>(2);
 
         UnitOfMeasure eachUom = getUnitOfMeasure("Each");
